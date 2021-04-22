@@ -1,0 +1,174 @@
+(function() {
+    var is_shsx=false;
+    var is_fjsx=false;
+    var uls=document.getElementsByTagName("nav");
+    for(var i = 0; i < uls.length; i++){
+        console.log(uls[i].className)
+        if(uls[i].className=='navbar navbar-inverse navbar-static-top'){
+            var li1 =document.createElement("div");
+            li1.setAttribute('class','dropdown');
+            li1.setAttribute('style','height:50px')
+            var a1 = document.createElement("div");
+            a1.className='navbar-header';
+            a1.setAttribute('style','font-size: 16px;padding: 15px 15px;height: 50px;float: left;line-height: 20px;color: #fff;')
+            a1.innerText='审核刷新';
+            a1.id='shsx';
+            a1.setAttribute('href','/#/queries/censor')
+            li1.appendChild(a1);
+            var a2 = document.createElement("div");
+            a2.className='navbar-header';
+            a2.setAttribute('style','font-size: 16px;padding: 15px 15px;height: 50px;float: left;line-height: 20px;color: #fff;')
+            a2.innerText='停止刷新';
+            a2.id='shtz';
+            a2.setAttribute('href','/#/queries/censor')
+            li1.appendChild(a2);
+            var a3 = document.createElement("input");
+            a3.className='nav-link dropdown-toggle';
+            a3.setAttribute('style','font-size: 18px;padding: 15px 15px;height: 20px;float: left;line-height: 1px;margin-left:20px;width: 60px;margin-top: 7px;')
+            a3.value = '5'
+            a3.id='timejg1';
+            li1.appendChild(a3);
+            uls[i].appendChild(li1);
+
+            var li2 =document.createElement("div");
+            li2.setAttribute('class','dropdown');
+            var a21 = document.createElement("div");
+            a21.className='navbar-header';
+            a21.setAttribute('style','font-size: 16px;padding: 15px 15px;height: 50px;float: left;line-height: 20px;color: #fff;')
+            a21.innerText='分拣刷新';
+            a21.id='fjsx';
+            a21.setAttribute('href','/#/queries/classify/pick')
+            li2.appendChild(a21);
+            var a22 = document.createElement("div");
+            a22.className='navbar-header';
+            a22.setAttribute('style','font-size: 16px;padding: 15px 15px;height: 50px;float: left;line-height: 20px;color: #fff;')
+            a22.innerText='停止刷新';
+            a22.id='fjtz';
+            a22.setAttribute('href','/#/queries/classify/pick')
+            li2.appendChild(a22);
+            var a23 = document.createElement("input");
+            a23.className='nav-link dropdown-toggle';
+            a23.setAttribute('style','font-size: 18px;padding: 15px 15px;height: 20px;float: left;line-height: 1px;margin-left:20px;width: 60px;margin-top: 7px;')
+            a23.value = '2'
+            a23.id='timejg2';
+            li2.appendChild(a23);
+            uls[i].appendChild(li2);
+        }
+    }
+    function showMessage(message, type,jg=1) {
+        var messageJQ = document.createElement("div");
+        messageJQ.innerText=message
+        if (type == 0) {
+            messageJQ.setAttribute('style','font-size:25px;padding: 15px 10px;border-radius: 10px;position: fixed;top: 20%;left: 30%;background-color: #f0f9eb;color: #67c23a;z-index:9999')
+        } else if (type == 1) {
+            messageJQ.setAttribute('style','font-size:25px;padding: 15px 10px;border-radius: 10px;position: fixed;top: 40%;left: 30%;background-color: #f0f9eb;color: #67c23a;z-index:9999')
+        }
+        var html = document.getElementsByTagName("html").item(0);
+        html.appendChild(messageJQ)
+        window.setTimeout(function () {
+            messageJQ.remove();
+        }, jg*1000);
+    }
+    function sleep(delay){return function(){return new Promise(function(resolve, reject){setTimeout(resolve, delay);});}}
+    function qq() {
+        if(is_shsx){
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://puzzle.yuanfudao.com/api/privileges/user');
+    　　    xhr.send();
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://puzzle.yuanfudao.com/api/user-info/current-detail');
+    　　    xhr.send();
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://puzzle.yuanfudao.com/api/queries/censor-pick?queryId=0');
+    　　    xhr.send();
+        　　xhr.onreadystatechange = function(){
+                if (xhr.readyState == 4) {
+            　　　　if( xhr.status == 404 ){
+                        showMessage('审核暂无题目',0,1);
+            　　　　} else if(xhr.status == 509){
+                        showMessage('审核访问频繁',0,1);
+            　　　　}else if(xhr.status == 200){
+                        showMessage('审核有题目啦',0,19);
+                        new Promise(function(resolve){
+                            is_shsx = false;
+                            clearInterval(set_sh)
+                            resolve();
+                          }).then(sleep(1000)).then(function(){
+                            window.location.href="https://puzzle.yuanfudao.com/#/queries/statistic";
+                          }).then(sleep(14000)).then(function(){
+                            window.location.href="https://puzzle.yuanfudao.com/#/queries/statistic";
+                          }).then(sleep(4000)).then(function(){
+                            window.location.href="https://puzzle.yuanfudao.com/#/queries/censor";
+                          })
+                    }else{
+                        showMessage('审核错误 ' + xhr.status.toString(),1,1);
+                        console.log('审核错误 ' + xhr.status.toString())
+                    }
+                }
+            };
+        }
+    }
+
+    function fj() {
+        if(is_fjsx){
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://puzzle.yuanfudao.com/api/queries/classify/pick');
+    　　    xhr.send();
+        　　xhr.onreadystatechange = function(){
+                if (xhr.readyState == 4) {
+            　　　　if( xhr.status == 404 ){
+                        showMessage('分拣暂无题目',1,1);
+            　　　　} else if(xhr.status == 509){
+                        showMessage('分拣访问频繁',1,1);
+            　　　　}else if(xhr.status == 200){
+                        showMessage('分拣有题目啦',1,3);
+                        new Promise(function(resolve){
+                            is_fjsx = false;
+                            clearInterval(set_fj)
+                            resolve();
+                          }).then(sleep(1000)).then(function(){
+                            window.location.href="https://puzzle.yuanfudao.com/#/queries/statistic";
+                          }).then(sleep(1000)).then(function(){
+                            window.location.href="https://puzzle.yuanfudao.com/#/queries/statistic";
+                          }).then(sleep(1000)).then(function(){
+                            window.location.href="https://puzzle.yuanfudao.com/#/queries/classify/pick";
+                          })
+                    }else{
+                        showMessage('分拣错误 ' + xhr.status.toString(),1,1);
+                        console.log('分拣错误 ' + xhr.status.toString())
+                    }
+                }
+            };
+        }
+    }
+    var shsx=document.getElementById('shsx')
+    var shtz=document.getElementById('shtz')
+    var fjsx=document.getElementById('fjsx')
+    var fjtz=document.getElementById('fjtz')
+    var set_sh;
+    var set_fj;
+    shsx.onclick = function(){
+        if(is_shsx==false){
+            var timejg = Number(document.getElementById('timejg1').value)
+            is_shsx = true;
+            showMessage('审核已开始,间隔 '+ timejg.toString()+'秒',0,3)
+            window.location.href="/#/queries/censor"
+            set_sh = setInterval(function(){
+                qq();
+            },timejg*1000)
+        }
+    }
+    fjsx.onclick = function(){
+        if(is_fjsx==false){
+            var timejg = Number(document.getElementById('timejg2').value)
+            is_fjsx = true;
+            showMessage('分拣已开始,间隔 '+ timejg.toString()+'秒',1,1)
+            window.location.href="/#/queries/classify/pick"
+            set_fj = setInterval(function(){
+                fj();
+            },timejg*1000)
+        }
+    }
+    shtz.onclick = function(){if(is_shsx==true){is_shsx = false;clearInterval(set_sh);showMessage('审核刷新已停止',0,1);}}
+    fjtz.onclick = function(){if(is_fjsx==true){is_fjsx = false;clearInterval(set_fj);showMessage('分拣刷新已停止',1,1);}}
+})();
