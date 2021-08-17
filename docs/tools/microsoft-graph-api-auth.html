@@ -6,6 +6,7 @@
     <title>Microsoft Graph API Auth</title>
     <link href='https://fonts.loli.net/icon?family=Material+Icons' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 </head>
 <body>
     <nav>
@@ -70,52 +71,52 @@
                 <input type="submit" value="Authorize" class="waves-effect waves-teal btn-flat" />
             </div>
         </form>
-
-        <form class="card" action="https://login.microsoftonline.com/common/oauth2/v2.0/token" method="POST">
+        
+        <div class="card">
             <div class="card-content">
                 <span class="card-title">5. Exchange Access Token</span>
                 <div class="input-field">
-                    <input placeholder="client_id" name="client_id" type="text">
+                    <input placeholder="client_id" class="client_id" name="client_id" type="text">
                     <label for="client_id">Client ID</label>
                 </div>
                 <div class="input-field">
-                    <input placeholder="offline_access," name="client_secret" type="text">
+                    <input placeholder="client_secret," class="client_secret" name="client_secret" type="text">
                     <label for="client_secret">Client Secret</label>
                 </div>
                 <div class="input-field">
-                    <input placeholder="offline_access," name="code" type="text">
+                    <input placeholder="code," class="code" name="code" type="text">
                     <label for="scope">Code</label>
                 </div>
                 <div class="input-field">
-                    <input placeholder="offline_access," name="scope" type="text"
+                    <input placeholder="scope," class="scope" name="scope" type="text"
                         value="offline_access Files.Read Files.Read.All Files.ReadWrite Files.ReadWrite.All">
                     <label for="scope">Scope</label>
                 </div>
                 <div class="input-field">
-                    <input placeholder="Placeholder" name="redirect_uri" type="text">
+                    <input placeholder="redirect_uri" class="redirect_uri" name="redirect_uri" type="text">
                     <label for="redirect_uri">Redirect Uri</label>
                 </div>
             </div>
             <input name="grant_type" type="text" hidden value="authorization_code">
             <div class="card-action">
-                <input type="submit" value="Get Token" class="waves-effect waves-teal btn-flat" />
+                <input type="submit" value="Get Token" class="waves-effect waves-teal btn-flat" id="get_code"/>
             </div>
-        </form>
+        </div>
 
 
-        <form class="card" action="https://login.microsoftonline.com/common/oauth2/v2.0/token" method="POST">
+        <!-- <form class="card" action="https://login.microsoftonline.com/common/oauth2/v2.0/token" method="POST">
             <div class="card-content">
                 <span class="card-title">Refresh Token</span>
                 <div class="input-field">
-                    <input placeholder="client_id" name="client_id" type="text">
+                    <input placeholder="client_id" class="client_id" name="client_id" type="text">
                     <label for="client_id">Client ID</label>
                 </div>
                 <div class="input-field">
-                    <input placeholder="offline_access," name="client_secret" type="text">
+                    <input placeholder="client_secret," class="client_secret" name="client_secret" type="text">
                     <label for="client_secret">Client Secret</label>
                 </div>
                 <div class="input-field">
-                    <input placeholder="offline_access," name="refresh_token" type="text">
+                    <input placeholder="offline_access," class="client_secret" name="refresh_token" type="text">
                     <label for="refresh_token">Refresh Token</label>
                 </div>
                 <div class="input-field">
@@ -127,7 +128,7 @@
             <div class="card-action">
                 <input type="submit" value="Get Token" class="waves-effect waves-teal btn-flat" />
             </div>
-        </form>
+        </form> -->
 
 
     </div>
@@ -141,6 +142,34 @@
         }
     </style>
     <script>
+        $("#get_code").click(function(){
+            var client_id = $(".client_id").val();
+            var client_secret = $(".client_secret").val();
+            var code = $(".code").val();
+            var scope = $(".scope").val();
+            var redirect_uri = $(".redirect_uri").val();
+            data={'client_id':client_id,'client_secret':client_secret,'code':code,'scope':scope,'redirect_uri':redirect_uri}
+            console.log(data)
+            if(client_id=='' || client_secret=='' || code=='' || scope=='' || redirect_uri==''){
+                alert('Parameters cannot be null')
+                return
+            }
+            
+            console.log(data)
+            $.ajax({
+                type:"POST",
+                url: window.location.protocol + "//" + window.location.host + window.location.pathname + "get_code",
+                dataType:"json",
+                data: data,
+                success:function(res){
+                    if(res.code==0){
+                        console.log(res.access_token,res.refresh_token)                           
+                    }else{
+                        alert(res.msg)                        
+                    }
+                }
+            });
+        });
         function syncField(name, value) {
             if (!value) value = localStorage.getItem(name);
             if (value)
