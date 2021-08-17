@@ -40,7 +40,7 @@
                     <li>
                         <p>Switch to <code>API permissions</code> tab, add permissions you need.</p>
                         <p>For OneDrive Index purpose, select following permssions: <code>offline_access</code>,
-                            <code>Files.Read</code>, <code>Files.Read.All</code> .</p>
+                            <code>Files.Read</code>, <code>Files.Read.All</code>, <code>Files.ReadWrite</code>, <code>Files.ReadWrite.All</code>.</p>
                         <p>&nbsp;</p>
                     </li>
 
@@ -57,7 +57,7 @@
                 </div>
                 <div class="input-field">
                     <input placeholder="offline_access," name="scope" type="text"
-                        value="offline_access Files.Read Files.Read.All">
+                        value="offline_access Files.Read Files.Read.All Files.ReadWrite Files.ReadWrite.All">
                     <label for="scope">Scope</label>
                 </div>
                 <div class="input-field">
@@ -85,6 +85,11 @@
                 <div class="input-field">
                     <input placeholder="offline_access," name="code" type="text">
                     <label for="scope">Code</label>
+                </div>
+                <div class="input-field">
+                    <input placeholder="offline_access," name="scope" type="text"
+                        value="offline_access Files.Read Files.Read.All Files.ReadWrite Files.ReadWrite.All">
+                    <label for="scope">Scope</label>
                 </div>
                 <div class="input-field">
                     <input placeholder="Placeholder" name="redirect_uri" type="text">
@@ -149,6 +154,7 @@
         window.onload = function () {
 
             syncField("client_id");
+            syncField("scope");
             syncField("redirect_uri",  window.location.protocol + "//" + window.location.host + window.location.pathname);
             document.querySelector("#location").textContent = window.location.protocol + "//" + window.location.host + window.location.pathname;
 
