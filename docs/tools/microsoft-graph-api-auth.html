@@ -201,7 +201,7 @@
             syncField("client_id");
             syncField("scope");
             syncField("redirect_uri",  window.location.protocol + "//" + window.location.host + window.location.pathname);
-            $("#location").textContent = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            $("#location").html(window.location.protocol + "//" + window.location.host + window.location.pathname);
             const params = (new URL(document.location)).searchParams;
             let code = params.get("code");
             if (code) {
