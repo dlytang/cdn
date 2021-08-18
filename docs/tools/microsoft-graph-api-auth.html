@@ -27,8 +27,7 @@
                 <span class="card-title">Introduction</span>
                 <ol>
                     <div>A simple web app to get your refresh_token by Client ID and Client Secrets using Microsoft Graph API</div>
-                    <div><p>Based on <a href="https://github.com/heymind/heymind.github.io/blob/master/tools/microsoft-graph-api-auth.html">microsoft-graph-api-auth</a> and
-                         <a href="https://github.com/Cakalisto/Microsoft-Ads-API-OAuth-Simulatorl">Microsoft-Ads-API-OAuth-Simulatorl</a></p></div>
+                    <div><p>Based on <a href="https://github.com/heymind/heymind.github.io/blob/master/tools/microsoft-graph-api-auth.html">microsoft-graph-api-auth</a></div>
                 </ol>
 
                 <span class="card-title">Prerequisite</span>
@@ -114,41 +113,14 @@
             <div class="card-content">
                 <span class="card-title">6. Result: Access_token And Refresh_token</span>
                 <div class="input-field">
-                    <input disabled placeholder="access_token" class="access_token" name="access_token" type="text">
+                    <textarea placeholder="access_token" class="access_token materialize-textarea" name="access_token"type="text" style="max-height: 150px;overflow-y: scroll""></textarea>
                     <label for="Access_token">Access_token</label>
                 </div>
                 <div class="input-field">
-                    <input disabled placeholder="refresh_token" class="refresh_token" name="refresh_token" type="text">
+                    <textarea placeholder="refresh_token" class="refresh_token materialize-textarea" name="refresh_token"type="text" style="max-height: 150px;overflow-y: scroll""></textarea>
                     <label for="refresh_token">Refresh_token</label>
                 </div>
         </div>
-        <!-- <form class="card" action="https://login.microsoftonline.com/common/oauth2/v2.0/token" method="POST">
-            <div class="card-content">
-                <span class="card-title">Refresh Token</span>
-                <div class="input-field">
-                    <input placeholder="client_id" class="client_id" name="client_id" type="text">
-                    <label for="client_id">Client ID</label>
-                </div>
-                <div class="input-field">
-                    <input placeholder="client_secret," class="client_secret" name="client_secret" type="text">
-                    <label for="client_secret">Client Secret</label>
-                </div>
-                <div class="input-field">
-                    <input placeholder="offline_access," class="client_secret" name="refresh_token" type="text">
-                    <label for="refresh_token">Refresh Token</label>
-                </div>
-                <div class="input-field">
-                    <input placeholder="Placeholder" name="redirect_uri" type="text">
-                    <label for="redirect_uri">Redirect Uri</label>
-                </div>
-            </div>
-            <input name="grant_type" type="text" hidden value="refresh_token">
-            <div class="card-action">
-                <input type="submit" value="Get Token" class="waves-effect waves-teal btn-flat" />
-            </div>
-        </form> -->
-
-
     </div>
 
 
@@ -180,7 +152,7 @@
                 success:function(res){
                     if(res.code==0){
                         console.log(res.access_token,res.refresh_token)  
-                        alert(`Got Access_token And Refresh_token Successfully`);
+                        alert(`Got Access_token And Refresh_token Successfully!`);
                         $(".access_token").val(res.access_token);
                         $(".refresh_token").val(res.refresh_token);                      
                     }else{
@@ -207,7 +179,6 @@
             if (code) {
                 alert(`Got Code ${code}`);
                 $("input[name=code]").val(code)
-                // document.querySelector("input[name=code]").value = code;
             }
         }
     </script>
