@@ -159,8 +159,9 @@
             $.ajax({
                 type:"POST",
                 url: window.location.protocol + "//" + window.location.host + window.location.pathname + "get_code",
+                contentType: "application/json",
                 dataType:"json",
-                data: data,
+                data: JSON.stringify(data),
                 success:function(res){
                     if(res.code==0){
                         console.log(res.access_token,res.refresh_token)                           
