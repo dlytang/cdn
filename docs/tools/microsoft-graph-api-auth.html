@@ -11,11 +11,11 @@
 <body>
     <nav>
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo center">Microsoft Graph API Auth by DLYT</a>
+            <a href="#" class="brand-logo center">Microsoft Graph API Auth</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="..">More tools</a></li>
-                <li><a href="https://idx0.dev">My blog</a></li>
-                <li><a href="https://github.com/heymind/heymind.github.io/blob/master/tools/microsoft-graph-api-auth.html">Source Code</a></li>
+                <!-- <li><a href="..">More tools</a></li> -->
+                <li><a href="https://cdn.jsdelivr.net/gh/dlytang/cdn@main/docs/tools/microsoft-graph-api-auth.html">Source Code</a></li>
+                <!-- <li><a href="https://github.com/heymind/heymind.github.io/blob/master/tools/microsoft-graph-api-auth.html">Source Code</a></li> -->
             </ul>
         </div>
     </nav>
@@ -24,6 +24,13 @@
 
         <div class="card">
             <div class="card-content">
+                <span class="card-title">Introduction</span>
+                <ol>
+                    <div>A simple web app to get your refresh_token by Client ID and Client Secrets using Microsoft Graph API</div>
+                    <div><p>Based on <a href="https://github.com/heymind/heymind.github.io/blob/master/tools/microsoft-graph-api-auth.html">microsoft-graph-api-auth</a> and
+                         <a href="https://github.com/Cakalisto/Microsoft-Ads-API-OAuth-Simulatorl">Microsoft-Ads-API-OAuth-Simulatorl</a></p></div>
+                </ol>
+
                 <span class="card-title">Prerequisite</span>
                 <ol>
                     <li>
@@ -103,7 +110,18 @@
             </div>
         </div>
 
-
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title">6. Result: Access_token And Refresh_token</span>
+                <div class="input-field">
+                    <input disabled placeholder="access_token" class="access_token" name="access_token" type="text">
+                    <label for="Access_token">Access_token</label>
+                </div>
+                <div class="input-field">
+                    <input disabled placeholder="refresh_token" class="refresh_token" name="refresh_token" type="text">
+                    <label for="refresh_token">Refresh_token</label>
+                </div>
+        </div>
         <!-- <form class="card" action="https://login.microsoftonline.com/common/oauth2/v2.0/token" method="POST">
             <div class="card-content">
                 <span class="card-title">Refresh Token</span>
@@ -148,14 +166,11 @@
             var code = $(".code").val();
             var scope = $(".scope").val();
             var redirect_uri = $(".redirect_uri").val();
-            data={'client_id':client_id,'client_secret':client_secret,'code':code,'scope':scope,'redirect_uri':redirect_uri}
-            console.log(data)
+            data={'client_id':client_id,'client_secret':client_secret,'code':code,'scope':scope,'redirect_uri':redirect_uri,'grant_type':'authorization_code'}
             if(client_id=='' || client_secret=='' || code=='' || scope=='' || redirect_uri==''){
                 alert('Parameters cannot be null')
                 return
             }
-            
-            console.log(data)
             $.ajax({
                 type:"POST",
                 url: window.location.protocol + "//" + window.location.host + window.location.pathname + "get_code",
@@ -164,7 +179,10 @@
                 data: JSON.stringify(data),
                 success:function(res){
                     if(res.code==0){
-                        console.log(res.access_token,res.refresh_token)                           
+                        console.log(res.access_token,res.refresh_token)  
+                        alert(`Got Access_token And Refresh_token Successfully`);
+                        $(".access_token").val(res.access_token);
+                        $(".refresh_token").val(res.refresh_token);                      
                     }else{
                         alert(res.msg)                        
                     }
@@ -174,26 +192,24 @@
         function syncField(name, value) {
             if (!value) value = localStorage.getItem(name);
             if (value)
-                document.querySelectorAll(`input[name=${name}]`).forEach(ii => ii.value = value);
-            document.querySelectorAll(`input[name=${name}]`).forEach((i) => i.onchange = (e) => {
+                $(`input[name=${name}]`)
+                $(`input[name=${name}]`).forEach(ii => ii.value = value);
+                $(`input[name=${name}]`).forEach((i) => i.onchange = (e) => {
                 localStorage.setItem(name, e.target.value);
-                document
-                    .querySelectorAll(`input[name=${name}]`).forEach(ii => ii.value = e.target.value)
+                $(`input[name=${name}]`).forEach(ii => ii.value = e.target.value)
             });
         }
         window.onload = function () {
-
             syncField("client_id");
             syncField("scope");
             syncField("redirect_uri",  window.location.protocol + "//" + window.location.host + window.location.pathname);
-            document.querySelector("#location").textContent = window.location.protocol + "//" + window.location.host + window.location.pathname;
-
-
+            $("#location").textContent = window.location.protocol + "//" + window.location.host + window.location.pathname;
             const params = (new URL(document.location)).searchParams;
             let code = params.get("code");
             if (code) {
                 alert(`Got Code ${code}`);
-                document.querySelector("input[name=code]").value = code;
+                $("input[name=code]").val(code)
+                // document.querySelector("input[name=code]").value = code;
             }
         }
     </script>
