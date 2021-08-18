@@ -174,7 +174,7 @@
             $.ajax({
                 type:"POST",
                 url: window.location.protocol + "//" + window.location.host + window.location.pathname + "get_code",
-                contentType: "application/json",
+                // contentType: "application/json",
                 dataType:"json",
                 data: JSON.stringify(data),
                 success:function(res){
@@ -191,12 +191,10 @@
         });
         function syncField(name, value) {
             if (!value) value = localStorage.getItem(name);
-            if (value)
-                $(`input[name=${name}]`)
-                $(`input[name=${name}]`).forEach(ii => ii.value = value);
-                $(`input[name=${name}]`).forEach((i) => i.onchange = (e) => {
-                localStorage.setItem(name, e.target.value);
-                $(`input[name=${name}]`).forEach(ii => ii.value = e.target.value)
+            if (value) document.querySelectorAll(`input[name=${name}]`).forEach(ii => ii.value = value);
+            document.querySelectorAll(`input[name=${name}]`).forEach((i) => i.onchange = (e) => {
+            localStorage.setItem(name, e.target.value);
+            document.querySelectorAll(`input[name=${name}]`).forEach(ii => ii.value = e.target.value)
             });
         }
         window.onload = function () {
@@ -208,7 +206,7 @@
             let code = params.get("code");
             if (code) {
                 alert(`Got Code ${code}`);
-                $("input[name=code]").val(code)
+                $("input[name=code]").val('code')
                 // document.querySelector("input[name=code]").value = code;
             }
         }
