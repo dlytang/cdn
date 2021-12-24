@@ -15,11 +15,7 @@ jobs:
       uses: actions/checkout@master 
       
     # from: https://github.com/actions/setup-node  
-
-
-
-    
-        
+  
     - name: Gitee设置
       env:
         GH_ACTION_DEPLOY_KEY: ${{ secrets.GITEE_KEY }}
