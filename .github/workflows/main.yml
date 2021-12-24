@@ -33,6 +33,7 @@ jobs:
         git config --global user.email '472548557@qq.com' 
     - name: push到Gitee
       run: |
+        ls
         git init
         git config --global --list
         git add .
