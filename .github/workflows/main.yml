@@ -1,0 +1,42 @@
+name: 自动部署
+
+on:
+  push:
+    branches:
+      - main  # default branch
+jobs:
+  build: 
+    runs-on: ubuntu-latest 
+        
+    steps:
+    # check it to your workflow can access it
+    # from: https://github.com/actions/checkout
+    - name: Checkout Repository master branch
+      uses: actions/checkout@master 
+      
+    # from: https://github.com/actions/setup-node  
+
+
+
+    
+        
+    - name: Gitee设置
+      env:
+        GH_ACTION_DEPLOY_KEY: ${{ secrets.GITEE_KEY }}
+      run: |
+        # set up private key for deploy
+        mkdir -p ~/.ssh/
+        echo "$GH_ACTION_DEPLOY_KEY" > ~/.ssh/id_rsa 
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan gitee.com >> ~/.ssh/known_hosts
+        git config --global user.name 'dlyt'  
+        git config --global user.email '472548557@qq.com' 
+    - name: push到Gitee
+      run: |
+        git init
+        git config --global --list
+        git add .
+        git commit -m "CI built at `date +"%Y-%m-%d %H:%M:%S"`"
+        git branch -M master
+        git remote add origin git@gitee.com:dlytang/cdn.git
+        git push -u origin master -f
